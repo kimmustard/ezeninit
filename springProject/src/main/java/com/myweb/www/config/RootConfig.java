@@ -10,6 +10,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -26,7 +28,7 @@ public class RootConfig {
 	public DataSource dataSource() {
 		HikariConfig hikariConfig = new HikariConfig();
 		// log4jdbc - log4j2의 드라이버 클래스 url을 사용
-		hikariConfig.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
+		hikariConfig.setDriverClassName("com.mysql.jdbc.Driver");
 		hikariConfig.setJdbcUrl("jdbc:mysql://localhost:3306/singledb");
 		hikariConfig.setUsername("springUser");
 		hikariConfig.setPassword("mysql");
@@ -55,7 +57,7 @@ public class RootConfig {
 	}
 
 	@Bean
-	public SqlSessionFactory sqlSesionFactory() throws Exception {
+	public SqlSessionFactory sqlSessionFactory() throws Exception {
 		SqlSessionFactoryBean sqlFactoryBean = new SqlSessionFactoryBean();
 		sqlFactoryBean.setDataSource(dataSource());
 		sqlFactoryBean.setMapperLocations(applicationContext.getResources("classpath:/mappers/*.xml"));
@@ -63,5 +65,12 @@ public class RootConfig {
 
 		return (SqlSessionFactory) sqlFactoryBean.getObject();
 	}
+	
+	// 트랜잭션 매니저 빈 설정
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+		return new DataSourceTransactionManager(dataSource());
+	}
+		
 
 }
