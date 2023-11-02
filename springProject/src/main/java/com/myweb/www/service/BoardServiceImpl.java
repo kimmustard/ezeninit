@@ -29,6 +29,11 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public BoardVO detail(Long bno) {
+		bdao.readCnt(bno);
+		return bdao.detail(bno);
+	}
+	@Override
+	public BoardVO nodetail(Long bno) {
 		return bdao.detail(bno);
 	}
 
@@ -41,4 +46,5 @@ public class BoardServiceImpl implements BoardService{
 	public int remove(Long bno) {
 		return bdao.remove(bno);
 	}
+
 }

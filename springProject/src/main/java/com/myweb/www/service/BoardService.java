@@ -11,6 +11,7 @@ public interface BoardService {
 	List<BoardVO> getList();
 
 	BoardVO detail(Long bno);
+	BoardVO nodetail(Long bno);
 
 	int modify(BoardVO bvo);
 

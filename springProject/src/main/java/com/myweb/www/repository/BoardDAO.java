@@ -11,9 +11,11 @@ public interface BoardDAO {
 	List<BoardVO> getList();
 
 	BoardVO detail(Long bno);
+	void readCnt(Long bno);
 
 	int modify(BoardVO bvo);
 
 	int remove(Long bno);
+
 
 }

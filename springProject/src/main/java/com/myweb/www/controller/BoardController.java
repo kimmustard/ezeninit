@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,16 +25,25 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BoardController {
 	
+	
 	private final BoardService bsv;
 	
 	
 	@GetMapping("/register")
-	public String registerForm() {
+	public String registerForm(Model model) {
+		model.addAttribute("bvo", new BoardVO());
 		return "/board/register";
 	}
 	
 	@PostMapping("/register")
-	public String register(@ModelAttribute("bvo") BoardVO bvo ) {
+	public String register(@Validated @ModelAttribute("bvo") BoardVO bvo , BindingResult bindingResult) {
+		log.info("register check!");
+		
+		if(bindingResult.hasErrors()) {
+			log.info("error 발생! = {}" , bindingResult.getFieldError());
+			return "/board/register";
+		}
+		
 		log.info("register bvo = {}", bvo);
 		bsv.insert(bvo);
 		return "redirect:/board/list";
@@ -52,18 +63,30 @@ public class BoardController {
 		return "/board/detail";
 	}
 	
+	@GetMapping("/nodetail")
+	public String nodetail(@RequestParam("bno") Long bno, Model model) {
+		BoardVO bvo = bsv.nodetail(bno);
+		model.addAttribute("bvo", bvo);
+		return "/board/detail";
+	}
+	
 	@GetMapping("/modify")
 	public String modifyForm(@RequestParam("bno") Long bno, Model model) {
-		BoardVO bvo = bsv.detail(bno);
+		BoardVO bvo = bsv.nodetail(bno);
 		model.addAttribute("bvo", bvo);
 		return "/board/modify";
 	}
 	
 	@PostMapping("/modify")
-	public String modify(@ModelAttribute("bvo") BoardVO bvo, Model model, RedirectAttributes rttr) {
+	public String modify(@Validated @ModelAttribute("bvo") BoardVO bvo, BindingResult bindingResult, Model model, RedirectAttributes rttr) {
+		
+		if(bindingResult.hasErrors()) {
+			return "/board/modify";
+		}
+		
 		int isOk = bsv.modify(bvo);
 		rttr.addAttribute("bno", bvo.getBno());
-		return "redirect:/board/detail";
+		return "redirect:/board/nodetail";
 	}
 	
 	@GetMapping("/remove")

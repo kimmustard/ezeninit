@@ -13,23 +13,16 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardVO {
+public class CommentVO {
 	
+	private Long cno;
 	private Long bno;
-	
-	@NotBlank(message = "제목을 입력하세요.")
-	private String title;
-	
 	private String writer;
 	
 	@NotBlank(message = "내용을 입력하세요.")
 	private String content;
-	
 	private String regAt;
 	private String modAt;
-	private int readCount;
-	private int cmtQty;
-	private int hasFile;
 	private String isDel;
-	
+
 }
