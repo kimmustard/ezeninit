@@ -45,7 +45,6 @@ public class CommentController {
 	
 	@GetMapping(value = "/{bno}" , produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<CommentVO>> spread(@PathVariable("bno")long bno){
-		log.info("bno = {}" , bno);
 		
 		List<CommentVO> list = csv.getList(bno);
 		
@@ -65,7 +64,6 @@ public class CommentController {
 	@PutMapping(value = "/{cno}", consumes = "application/json", produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> modify(@RequestBody CommentVO cvo){
 		
-		log.info("cvo ={}", cvo);
 		int isOk = csv.modify(cvo);
 		return isOk > 0 ? new ResponseEntity<String>("1", HttpStatus.OK) :
 			 new ResponseEntity<String>("0", HttpStatus.INTERNAL_SERVER_ERROR) ;

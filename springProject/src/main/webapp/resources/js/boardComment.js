@@ -77,7 +77,7 @@ function getCommentList(bno) {
                 str += `<h4 class="card-title"> ${result[i].content}</h4>`;
                 str += `<div id="modContainer${i}">`;
                 str += `</div>`;
-                str += `<p class="card-text"> ${result[i].regAt}</p>`;
+                str += `<p class="card-text"> ${result[i].modAt}</p>`;
                 str += `</div>`;
                 str += `</div>`;
                 str += `</div>`;
@@ -97,29 +97,26 @@ document.addEventListener('click', (e) => {
     if (e.target.classList.contains('modBtn')) {
         console.log('수정버튼 클릭');
         let num = e.target.dataset.num;
-        console.log(num);
         let cno = e.target.dataset.cno;
         let writer = e.target.dataset.writer;
 
         let div = document.getElementById(`modContainer${num}`);
         div.innerHTML = '';
-        let str = `<input id="2cmtModBtn${num}" type="text"><button type="button" class="cmtModBtn" id="cmtModBtn${num}">수정하기</button>`;
+        let str = `<input id="modText${num}" type="text"><button type="button" class="cmtModBtn" id="cmtModBtn${num}">수정하기</button>`;
         div.innerHTML += str;
-        let content = document.getElementById(`2cmtModBtn${num}`).value;
-        console.log(content);
-
         document.getElementById(`cmtModBtn${num}`).setAttribute('data-num', num);
         document.getElementById(`cmtModBtn${num}`).setAttribute('data-cno', cno);
         document.getElementById(`cmtModBtn${num}`).setAttribute('data-writer', writer);
-        document.getElementById(`cmtModBtn${num}`).setAttribute('data-content', content);
+
 
 
     } else if (e.target.classList.contains('cmtModBtn')) {
+        let num = e.target.dataset.num;
         let cmtDataMod = {
             bno: bnoVal,
             cno: e.target.dataset.cno,
             writer: e.target.dataset.writer,
-            content: e.target.dataset.content
+            content: document.getElementById(`modText${num}`).value
         };
 
 

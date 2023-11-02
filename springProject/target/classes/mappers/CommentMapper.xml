@@ -17,6 +17,6 @@
 	</update>
 	
 	<update id="modify">
-		update comment set content = #{content} where cno = #{cno}
+		update comment set content = #{content}, mod_at = now() where cno = #{cno}
 	</update>
 </mapper>
