@@ -42,7 +42,14 @@ public class CommentServiceImpl implements CommentService{
 		
 		return cdao.modify(cvo);
 	}
-	
+
+	@Override
+	public void cmtDeleteAll(Long bno) {
+		cdao.cmtDeleteAll(bno);
+		
+	}
+
+
 	
 	
 }

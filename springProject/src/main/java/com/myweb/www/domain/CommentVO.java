@@ -1,6 +1,7 @@
 package com.myweb.www.domain;
 
-import javax.validation.constraints.NotBlank;
+
+import javax.validation.constraints.NotEmpty;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class CommentVO {
 	private Long bno;
 	private String writer;
 	
-	@NotBlank(message = "내용을 입력하세요.")
+	@NotEmpty(message = "내용을 입력하세요.")
 	private String content;
 	private String regAt;
 	private String modAt;

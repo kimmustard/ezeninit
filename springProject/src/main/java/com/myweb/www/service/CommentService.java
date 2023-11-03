@@ -14,4 +14,7 @@ public interface CommentService {
 
 	int modify(CommentVO cvo);
 
+	void cmtDeleteAll(Long bno);
+
+	
 }

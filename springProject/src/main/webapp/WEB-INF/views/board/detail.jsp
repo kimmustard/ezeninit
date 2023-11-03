@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>  
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,8 +52,35 @@ margin-right: 300px;
 			</tr>
 	</table>
 	
-	<a href="/board/modify?bno=${bvo.bno }"><button type="button">수정</button></a><br>
-	<a href="/board/remove?bno=${bvo.bno }"><button type="button">삭제</button></a><br>
+	<!-- 그림 표시 라인 -->
+	<c:set value="${bdto.flist }" var="flist"></c:set>
+	
+	<ul>
+	
+		<c:forEach items="${flist }" var="fvo">
+			<li>
+			<c:choose>
+				<c:when test="${fvo.fileType > 0}">
+					<div>
+						<div class="fw-bold">${fvo.fileName }</div>
+						<a href="/board/file/${fvo.uuid }"><img alt="그림 없음" src="/upload/${fn:replace(fvo.saveDir,'\\','/')}/${fvo.uuid}_th_${fvo.fileName}"></a>
+						<div class="badge rounded-pill text-bg-dark">${fvo.regAt } </div>
+					</div>
+				</c:when>
+				<c:otherwise>
+						<div>
+							<!-- file 아이콘 같은 모양 값으로 넣을 수 있음. -->
+						</div>
+				</c:otherwise>
+			</c:choose>
+			</li>
+		</c:forEach>
+	</ul>
+	
+	
+	<a href="/board/modify?bno=${bvo.bno }"><button type="button" class="btn btn-primary">수정</button></a> 
+	<a href="/board/remove?bno=${bvo.bno }"><button type="button" class="btn btn-primary">삭제</button></a><br>
+	<br>
 	<a href="/"> 메인으로 </a>
 	<hr>
 	

@@ -2,15 +2,18 @@ package com.myweb.www.repository;
 
 import java.util.List;
 
+import com.myweb.www.domain.BoardDTO;
 import com.myweb.www.domain.BoardVO;
 import com.myweb.www.domain.PagingVO;
 
 public interface BoardDAO {
 
-	void insert(BoardVO bvo);
+	int insert(BoardVO bvo);
+	Long selectLastBno();
 
 	List<BoardVO> getList(PagingVO pgvo);
 	void cntCommentList();
+	void cntFileList();
 	int getTotalCount(PagingVO pgvo);
 
 	BoardVO detail(Long bno);
@@ -19,6 +22,7 @@ public interface BoardDAO {
 	int modify(BoardVO bvo);
 
 	int remove(Long bno);
+
 
 
 

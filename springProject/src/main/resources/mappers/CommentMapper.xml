@@ -19,4 +19,8 @@
 	<update id="modify">
 		update comment set content = #{content}, mod_at = now() where cno = #{cno}
 	</update>
+	
+	<update id="cmtDeleteAll">
+		update comment set isDel = 'Y' where bno = #{bno}
+	</update>
 </mapper>
