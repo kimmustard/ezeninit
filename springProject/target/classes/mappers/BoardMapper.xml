@@ -8,6 +8,11 @@
 		values(#{title}, #{writer}, #{content})
 	</insert>
 	
+	<insert id="ninsert">
+		insert into board(title, writer, content, isDel)
+		values(#{title}, #{writer}, #{content}, 'A')
+	</insert>
+	
 	<select id="selectLastBno" resultType="Long">
 		select max(bno) from board where isDel = 'N'
 	</select>
@@ -71,5 +76,15 @@
 		</if>
 	
 	</sql>
+	
+	
+	<select id="getNewList" resultType="com.myweb.www.domain.BoardVO">
+		select * from board where isDel = 'N' order by bno desc limit 10
+	</select>
+	
+	<select id="getNoticeList" resultType="com.myweb.www.domain.BoardVO">
+		select * from board where isDel = 'A' order by bno desc
+	</select>
+
 
 </mapper>

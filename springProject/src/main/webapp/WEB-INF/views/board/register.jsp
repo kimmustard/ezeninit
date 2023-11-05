@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
@@ -18,6 +19,7 @@
 <body>
 	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
+	<sec:authentication property="principal.mvo.email" var="authEmail"/>
 	
 	<form:form action="/board/register" method="post" modelAttribute="bvo" enctype="multipart/form-data">
 	
@@ -32,7 +34,7 @@
 			</tr>	
 			<tr>
 				<td>글쓴이</td>
-				<td><input type="text" name="writer"></td>
+				<td><input type="text" value="${authEmail}" name="writer" readonly="readonly"></td>
 			</tr>
 			<tr>
 				<td>내용</td>
@@ -58,7 +60,7 @@
 	
 		<button type="submit" id="regBtn" class="btn btn-primary"> 작성완료 </button> <br>
 	</form:form>
-		<a href="/"><button type="button" class="btn btn-primary">메인으로</button></a>
+		<a href="/"><button type="button" class="btn btn-primary"> 메인으로 </button></a>
 	
 	<script type="text/javascript" src="/resources/js/boardRegister.js"></script>
 	<jsp:include page="../common/footer.jsp" />

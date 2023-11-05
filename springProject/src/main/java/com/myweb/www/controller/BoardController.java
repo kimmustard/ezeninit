@@ -52,6 +52,14 @@ public class BoardController {
 		return "/board/register";
 	}
 	
+	@GetMapping("/noticeRegister")
+	public String noticeRegisterForm(Model model) {
+		log.info("ddddddddddddddddd");
+		model.addAttribute("bvo", new BoardVO());
+		return "/board/noticeRegister";
+	}
+	
+	
 	@PostMapping("/register")
 	public String register(@Validated @ModelAttribute("bvo") BoardVO bvo, BindingResult bindingResult,
 			@RequestParam(name = "files", required = false) MultipartFile[] files) {
@@ -73,8 +81,34 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
+	@PostMapping("/noticeRegister")
+	public String noticeRegister(@Validated @ModelAttribute("bvo") BoardVO bvo, BindingResult bindingResult,
+			@RequestParam(name = "files", required = false) MultipartFile[] files) {
+		log.info("bvo = {}" , bvo);
+		
+		if(bindingResult.hasErrors()) {
+			log.info("에러발생 = {}",bindingResult.getFieldError());
+			return "/board/register";
+		}
+		
+		List<FileVO> flist = null;
+		if(files[0].getSize() > 0) {
+			flist = fh.uploadFiles(files);
+		}
+		
+		int isOk = bsv.ninsert(new BoardDTO(bvo, flist));
+		log.info("register = {} ", (isOk > 0 ? "Ok" : "Fail"));
+		return "redirect:/board/noticeList";
+	}
+	
+	
 	@GetMapping("/list")
 	public String list(Model model, PagingVO pgvo) {
+		//공지사항
+		List<BoardVO> noticeList = bsv.getNoticeList();
+		model.addAttribute("noticeList", noticeList);
+		
+		//일반게시물
 		List<BoardVO> list = bsv.getList(pgvo);
 		model.addAttribute("list", list);
 		
@@ -83,6 +117,15 @@ public class BoardController {
 		model.addAttribute("ph",ph);
 		
 		return "/board/list";
+	}
+	
+	@GetMapping("/noticeList")
+	public String nlist(Model model, PagingVO pgvo) {
+		//공지사항
+		List<BoardVO> noticeList = bsv.getNoticeList();
+		model.addAttribute("noticeList", noticeList);
+		
+		return "/board/noticeList";
 	}
 	
 	// read count detail
@@ -117,6 +160,9 @@ public class BoardController {
 			@RequestParam(name = "files", required= false )MultipartFile[] files ) {
 		
 		if(bindingResult.hasErrors()) {
+			BoardDTO bdto = bsv.nodetail(bvo.getBno());
+			model.addAttribute("bvo", bvo);
+			model.addAttribute("boardDTO" , bdto);
 			return "/board/modify";
 		}
 		
@@ -156,7 +202,7 @@ public class BoardController {
 		String fileName = fvo.getFileName();
 
 		//풀경로
-		String fullName = "file:///D:\\_myweb\\_java\\fileupload\\"+date+"\\"+uuid+"_"+fileName;
+		String fullName = "file:///C:\\_myweb\\_java\\fileupload\\"+date+"\\"+uuid+"_"+fileName;
 		log.info("Download fullName>>>>>>>> = {}", fullName);
 		
 		//resource객체로 매핑
@@ -171,5 +217,6 @@ public class BoardController {
 	}
 	
 	
+
 	
 }

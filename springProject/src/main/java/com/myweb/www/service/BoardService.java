@@ -9,7 +9,9 @@ import com.myweb.www.domain.PagingVO;
 
 public interface BoardService {
 
+	/* BoardController */
 	int insert(BoardDTO bdto);
+	int ninsert(BoardDTO boardDTO);
 
 	List<BoardVO> getList(PagingVO pgvo);
 
@@ -25,5 +27,16 @@ public interface BoardService {
 	int removeFile(String uuid);
 
 	FileVO getFile(String uuid);
+
+	
+	
+	/* HomeController */
+	List<BoardVO> getNewList();
+
+	List<BoardVO> getNoticeList();
+
+
+
+	
 
 }

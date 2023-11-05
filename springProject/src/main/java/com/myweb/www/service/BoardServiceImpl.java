@@ -24,10 +24,31 @@ public class BoardServiceImpl implements BoardService{
 	private final FileDAO fdao;
 	private final CommentService csv;
 	
-	
+	@Transactional
 	@Override
 	public int insert(BoardDTO bdto) {
 		int isUp = bdao.insert(bdto.getBvo());
+		
+		if(bdto.getFlist() == null) {
+			isUp *= 1;
+			return isUp;
+		}
+		
+		//bvo insert 이후 파일이 없으면?
+		if(isUp > 0 && bdto.getFlist().size() > 0) {
+			Long bno = bdao.selectLastBno();
+			for (FileVO fvo : bdto.getFlist()) {
+				fvo.setBno(bno);
+				isUp *= fdao.inserFile(fvo);
+			}
+		}
+		
+		return isUp;
+	}
+
+	@Override
+	public int ninsert(BoardDTO bdto) {
+		int isUp = bdao.ninsert(bdto.getBvo());
 		
 		if(bdto.getFlist() == null) {
 			isUp *= 1;
@@ -121,6 +142,19 @@ public class BoardServiceImpl implements BoardService{
 		
 		return fdao.getFile(uuid);
 	}
+
+	@Override
+	public List<BoardVO> getNewList() {
+		
+		return bdao.getNewList();
+	}
+
+	@Override
+	public List<BoardVO> getNoticeList() {
+		return bdao.getNoticeList();
+	}
+
+
 
 	
 

@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -76,10 +77,12 @@ margin-right: 300px;
 			</li>
 		</c:forEach>
 	</ul>
+	<sec:authentication property="principal.mvo.email" var="authEmail"/>
 	
-	
-	<a href="/board/modify?bno=${bvo.bno }"><button type="button" class="btn btn-primary">수정</button></a> 
-	<a href="/board/remove?bno=${bvo.bno }"><button type="button" class="btn btn-primary">삭제</button></a><br>
+	<c:if test="${authEmail eq bvo.writer }">
+		<a href="/board/modify?bno=${bvo.bno }"><button type="button" class="btn btn-primary">수정</button></a> 
+		<a href="/board/remove?bno=${bvo.bno }"><button type="button" class="btn btn-primary">삭제</button></a>
+	</c:if>
 	<br>
 	<a href="/"> 메인으로 </a>
 	<hr>
@@ -105,6 +108,7 @@ margin-right: 300px;
 	
 	<script type="text/javascript">
 		const bnoVal = `<c:out value="${bvo.bno}" />`
+		
 	</script>
 	<script type="text/javascript" src="/resources/js/boardComment.js"></script>
 	<jsp:include page="../common/footer.jsp" />

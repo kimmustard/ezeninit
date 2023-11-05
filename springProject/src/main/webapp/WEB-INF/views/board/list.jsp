@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,26 +8,40 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="/resources/css/bootstrap.css" />
 <style type="text/css">
+	.BoardContainer{
+		margin: 100px;
+	}
 	.form-group{
 		display: flex;
 		width: 500px;
+	}
+	.paging-Container{
+		display: flex;
+		justify-content: space-around;
+		
+	}
+	.notice{
+		color:black;
+	}
+	
+	td>a:link,td>a:visited{
+		text-decoration: none;
+		color: black;
+
 	}
 </style>
 </head>
 <body>
 	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
-
-
-	
+	<div class="BoardContainer">
 
 	<table class="table table-hover">
 		<thead>
-			<tr>
+			<tr class="table-primary">
 				<td>번호</td>
 				<td>글제목</td>
 				<td>작성자</td>
-				<td>내용</td>
 				<td>작성일</td>
 				<td>조회수</td>
 				<td>댓글수</td>
@@ -36,12 +51,22 @@
 
 		</thead>
 		<tbody>
+			<c:forEach items="${noticeList }" var="bvo">
+				<tr class="table-light">
+					<td><span class="notice">공지사항</span></td>
+					<td><c:if test="${bvo.hasFile > 0 }"><i class="bi bi-image"></i></c:if><a href="/board/detail?bno=${bvo.bno }">${bvo.title}</a></td>
+					<td><span class="notice">운영자</span></td>
+					<td>${bvo.regAt }</td>
+					<td>${bvo.readCount }</td>
+					<td>${bvo.cmtQty }</td>
+					<td>${bvo.hasFile }</td>
+				</tr>
+			</c:forEach>
 			<c:forEach items="${list }" var="bvo">
 				<tr>
 					<td><a href="/board/detail?bno=${bvo.bno }">${bvo.bno}</a></td>
-					<td><a href="/board/detail?bno=${bvo.bno }">${bvo.title}</a></td>
+					<td><c:if test="${bvo.hasFile > 0 }"><i class="bi bi-image"></i></c:if><a href="/board/detail?bno=${bvo.bno }">${bvo.title}</a></td>
 					<td>${bvo.writer}</td>
-					<td>${bvo.content}</td>
 					<td>${bvo.regAt }</td>
 					<td>${bvo.readCount }</td>
 					<td>${bvo.cmtQty }</td>
@@ -52,9 +77,9 @@
 	</table>
 	<br>
 	<!-- 검색 라인 -->
-	<div>
+	<div class="paging-Container">
 		<form action="/board/list" method="get">
-			<div></div>
+
 				<c:set value="${ph.pgvo.type }" var="typed"></c:set>
 
 
@@ -77,37 +102,46 @@
 					</div>
 				</div>
 		</form>
-	</div>
-	<br>
+	
+
 	
 	<!-- 페이징 라인 -->
-	<ul class="pagination">
-		
-		<li class="page-item ${(ph.prev eq false) ? 'disabled' : '' }">
-			<a class="page-link" href="/board/list?pageNo=${ph.startPage-1 }&qty=${ph.pgvo.qty}&type=${ph.pgvo.type}&keyword=${ph.pgvo.keyword}">
-				<span aria-hidden="true">&laquo;</span>
+	
+		<ul class="pagination">
+			
+			<li class="page-item ${(ph.prev eq false) ? 'disabled' : '' }">
+				<a class="page-link" href="/board/list?pageNo=${ph.startPage-1 }&qty=${ph.pgvo.qty}&type=${ph.pgvo.type}&keyword=${ph.pgvo.keyword}">
+					<span aria-hidden="true">&laquo;</span>
+				</a>
+			</li>
+			
+			<!-- 페이지 숫자 -->
+			<c:forEach begin="${ph.startPage }" end="${ph.endPage }" var="i">
+			<li class="page-item">
+				<a class="page-link" href="/board/list?pageNo=${i}&qty=${ph.pgvo.qty}&type=${ph.pgvo.type}&keyword=${ph.pgvo.keyword}">${i}</a>
+			</li>
+			</c:forEach>
+			
+			<!-- next -->
+			
+			<li class="page-item ${(ph.next eq false) ? 'disabled' : '' }">
+				<a class="page-link" href="/board/list?pageNo=${ph.endPage+1 }&qty=${ph.pgvo.qty}&type=${ph.pgvo.type}&keyword=${ph.pgvo.keyword}">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			</li>	
+		</ul>
+		<div class="registerBtn">
+		<sec:authorize access="isAuthenticated()">
+			<a class="nav-link" href="/board/register">
+				<button type="button" class="btn btn-primary">작성하기</button>
 			</a>
-		</li>
+		</sec:authorize>
+		</div>
 		
-		<!-- 페이지 숫자 -->
-		<c:forEach begin="${ph.startPage }" end="${ph.endPage }" var="i">
-		<li class="page-item">
-			<a class="page-link" href="/board/list?pageNo=${i}&qty=${ph.pgvo.qty}&type=${ph.pgvo.type}&keyword=${ph.pgvo.keyword}">${i}</a>
-		</li>
-		</c:forEach>
-		
-		<!-- next -->
-		
-		<li class="page-item ${(ph.next eq false) ? 'disabled' : '' }">
-			<a class="page-link" href="/board/list?pageNo=${ph.endPage+1 }&qty=${ph.pgvo.qty}&type=${ph.pgvo.type}&keyword=${ph.pgvo.keyword}">
-				<span aria-hidden="true">&raquo;</span>
-			</a>
-		</li>
-		
-	</ul>
+	</div>
 	<hr>
-
-	<a href="/"><button type="button">메인으로</button></a>
+	
+	</div>
 	<jsp:include page="../common/footer.jsp" />
 </body>
 </html>
