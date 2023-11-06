@@ -7,8 +7,14 @@
 <head>
 <title>Home</title>
 <link rel="stylesheet" href="/resources/css/bootstrap.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <style type="text/css">
+
+body{
+	overflow-x: hidden;
+}
 .mainContainer {
+	width: 4000px;
 	display: flex;
 }
 
@@ -17,10 +23,11 @@
 	width: 300px;
 	text-align: center;	
 	position: relative;
+	z-index: 1;
 }
 
 .boardContainer {
-	width: 100%;
+	width: 3000px;
 	height: 800px;
 	display: flex;
 	justify-content: space-around;
@@ -94,6 +101,43 @@ td>a:link,td>a:visited {
 	height: 50px;
 	border: 1px solid red;
 }
+.slider-btn{
+	z-index: 1;
+}
+.right-btn{
+	position: absolute;
+	top: 450px;
+	font-size: 40px;
+	left: 1830px;
+	border: none;
+	background-color:transparent;
+}
+
+.left-btn{
+	position: absolute;	
+	top: 450px;
+	font-size: 40px;
+	left: 350px;
+	border: none;
+	background-color:transparent;
+}
+.bi-chevron-double-left{
+	color: #2c3e50;
+	font-size: 60px;
+	font-weight: 700;
+}
+
+.bi-chevron-double-right{
+	color: #2c3e50;
+	font-size: 60px;
+	font-weight: 700;
+}
+
+.bi:hover {
+	color: #18bc9c;
+}
+
+
 </style>
 </head>
 
@@ -186,8 +230,11 @@ td>a:link,td>a:visited {
 		</sec:authorize>
 
 
-		<div class="boardContainer">
-
+		<div class="slider-btn">
+			<button class="left-btn" id="leftBtn"><i class="bi bi-chevron-double-left"></i></button>
+			<button class="right-btn" id="rightBtn"><i class="bi bi-chevron-double-right"></i></button>
+		</div>
+		<div class="boardContainer" id="boardContainer">
 			<div class="card border-primary mb-3 boardBox">
 				<div class="card-header">공지사항</div>
 				<div class="card-body boardBody">
@@ -210,10 +257,22 @@ td>a:link,td>a:visited {
 			</div>
 
 			<div class="card border-primary mb-3 boardBox">
-				<div class="card-header">내가 쓴 글</div>
+					<div class="card-header">내가 쓴 글</div>
 				<div class="card-body boardBody">
-					<h4 class="card-title">Success card title</h4>
-					<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+					<table class="table table-hover">
+						<tr>
+							<td>번호</td>
+							<td>글제목</td>
+							<td>작성자</td>
+						</tr>
+						<c:forEach items="${myList }" var="myList">
+						<tr>
+							<td><a href="/board/detail?bno=${myList.bno }"><span>${myList.bno}</span></a></td>
+							<td class="icon-line"><c:if test="${myList.hasFile > 0 }"><i class="bi bi-image"></i></c:if><a href="/board/detail?bno=${myList.bno }"><span class="list-span">${myList.title}</span></a></td>
+							<td><span class="list-span2">${myList.writer}</span></td>
+						</tr>
+						</c:forEach>
+					</table>	
 				</div>
 			</div>
 
@@ -236,13 +295,41 @@ td>a:link,td>a:visited {
 					</table>	
 				</div>
 			</div>
+			
+			<div class="card border-primary mb-3 boardBox">
+				<div class="card-header">고객센터</div>
+				<div class="card-body boardBody">
+					준비중
+				</div>
+			</div>
+			
+			<div class="card border-primary mb-3 boardBox">
+				<div class="card-header">찾아오는 길</div>
+				<div class="card-body boardBody">
+					<div>
+						<img alt="그림없음" src="/resources/image/지도.PNG" width="400" height="400">
+					</div>
+				</div>
+			</div>
+			
+			<div class="card border-primary mb-3 boardBox">
+				<div class="card-header">날씨</div>
+				<div class="card-body boardBody">
+					준비중
+				</div>
+			</div>
+			
+		
 
 		</div>
+		
+		
 
 	</div>
 
 	<jsp:include page="common/footer.jsp" />
 	
+	<script type="text/javascript" src="/resources/js/mainSlider.js"></script>
 
 </body>
 

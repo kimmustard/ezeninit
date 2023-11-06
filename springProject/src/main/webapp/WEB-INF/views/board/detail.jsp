@@ -77,8 +77,9 @@ margin-right: 300px;
 			</li>
 		</c:forEach>
 	</ul>
-	<sec:authentication property="principal.mvo.email" var="authEmail"/>
-	
+	<sec:authorize access="isAuthenticated()">
+		<sec:authentication property="principal.mvo.email" var="authEmail"/>
+	</sec:authorize>
 	<c:if test="${authEmail eq bvo.writer }">
 		<a href="/board/modify?bno=${bvo.bno }"><button type="button" class="btn btn-primary">수정</button></a> 
 		<a href="/board/remove?bno=${bvo.bno }"><button type="button" class="btn btn-primary">삭제</button></a>
@@ -90,7 +91,7 @@ margin-right: 300px;
 	<!-- 댓글 입력라인 -->
 	<div class="cmtContainer">
 		<div class="input-group mb-3">
-			<span class="badge bg-primary" id="cmtWriter">댓글테스터</span>
+			<span class="badge bg-primary" id="cmtWriter">${authEmail}</span>
      		<input type="text" class="form-control" placeholder="댓글을 입력해주세요." id="cmtText">
      		<button class="btn btn-primary" type="button" id="cmtPostBtn">댓글 작성</button>
     	</div>	 	
@@ -107,7 +108,8 @@ margin-right: 300px;
 	</ul>
 	
 	<script type="text/javascript">
-		const bnoVal = `<c:out value="${bvo.bno}" />`
+		const bnoVal = `<c:out value="${bvo.bno}" />`;
+		const email = `<c:out value="${authEmail}" />`;
 		
 	</script>
 	<script type="text/javascript" src="/resources/js/boardComment.js"></script>

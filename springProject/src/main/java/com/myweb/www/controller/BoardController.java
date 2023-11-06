@@ -54,7 +54,6 @@ public class BoardController {
 	
 	@GetMapping("/noticeRegister")
 	public String noticeRegisterForm(Model model) {
-		log.info("ddddddddddddddddd");
 		model.addAttribute("bvo", new BoardVO());
 		return "/board/noticeRegister";
 	}
@@ -202,7 +201,7 @@ public class BoardController {
 		String fileName = fvo.getFileName();
 
 		//풀경로
-		String fullName = "file:///C:\\_myweb\\_java\\fileupload\\"+date+"\\"+uuid+"_"+fileName;
+		String fullName = "file:///D:\\_myweb\\_java\\fileupload\\"+date+"\\"+uuid+"_"+fileName;
 		log.info("Download fullName>>>>>>>> = {}", fullName);
 		
 		//resource객체로 매핑

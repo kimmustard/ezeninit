@@ -85,6 +85,10 @@
 	<select id="getNoticeList" resultType="com.myweb.www.domain.BoardVO">
 		select * from board where isDel = 'A' order by bno desc
 	</select>
+	
+	<select id="getMyList" resultType="com.myweb.www.domain.BoardVO">
+		select * from board where isDel = 'N' and writer = #{email} order by bno desc
+	</select>
 
 
 </mapper>

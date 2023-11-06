@@ -154,6 +154,12 @@ public class BoardServiceImpl implements BoardService{
 		return bdao.getNoticeList();
 	}
 
+	@Override
+	public List<BoardVO> getMyList(String name) {
+		
+		return bdao.getMyList(name);
+	}
+
 
 
 	

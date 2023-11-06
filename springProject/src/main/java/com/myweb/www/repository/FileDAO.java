@@ -16,4 +16,6 @@ public interface FileDAO {
 
 	FileVO getFile(String uuid);
 
+	List<FileVO> selectAllFiles();
+
 }

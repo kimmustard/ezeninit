@@ -23,4 +23,8 @@
   	<select id="getFile" resultType="com.myweb.www.domain.FileVO">
   		select * from file where uuid = #{uuid}
   	</select>
+  	
+  	<select id="selectAllFiles" resultType="com.myweb.www.domain.FileVO">
+  		select * from file
+  	</select>
   </mapper>

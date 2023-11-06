@@ -1,5 +1,6 @@
 package com.myweb.www.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -27,10 +28,16 @@ public class HomeController {
 	 */
 	
 	@GetMapping("/")
-	public String home(Model model) {
+	public String home(Model model, Principal principal) {
+		
 		List<BoardVO> noticeList = bsv.getNoticeList();
-//		List<BoardVO> mList = bsv.getMyList(세션정보);
 		List<BoardVO> newList = bsv.getNewList();
+
+		if(principal != null) {
+			log.info("user name = {}", principal.getName());
+			List<BoardVO> myList = bsv.getMyList(principal.getName());
+			model.addAttribute("myList", myList);
+		}
 		
 		model.addAttribute("noticeList", noticeList);
 		model.addAttribute("newList", newList);

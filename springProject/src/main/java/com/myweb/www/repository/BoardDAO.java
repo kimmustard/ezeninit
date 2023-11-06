@@ -27,6 +27,7 @@ public interface BoardDAO {
 	/**/
 	List<BoardVO> getNewList();
 	List<BoardVO> getNoticeList();
+	List<BoardVO> getMyList(String name);
 	
 
 

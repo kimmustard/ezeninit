@@ -71,8 +71,8 @@ function getCommentList(bno) {
                 str += `<div class="card border-primary mb-3" style="max-width: 20rem;">`;
                 str += `<div class="card-header">`;
                 str += `${result[i].writer}`;
-                str += `<button type="button" class="modBtn" data-num=${i} data-cno=${result[i].cno} data-writer=${result[i].writer} data-content=${result[i].content}>수정</button>`;
-                str += `<button type="button" class="delBtn" data-cno=${result[i].cno} data-writer=${result[i].wirter}>삭제</button></div> `;
+                str += `<button type="button" id="modBtn${i}" class="modBtn" data-num=${i} data-cno=${result[i].cno} data-writer=${result[i].writer} data-content=${result[i].content} disabled>수정</button>`;
+                str += `<button type="button" id="delBtn${i}" class="delBtn" data-cno=${result[i].cno} data-writer=${result[i].wirter} disabled>삭제</button></div> `;
                 str += `<div class="card-body">`;
                 str += `<h4 class="card-title"> ${result[i].content}</h4>`;
                 str += `<div id="modContainer${i}">`;
@@ -83,7 +83,15 @@ function getCommentList(bno) {
                 str += `</div>`;
                 str += `<br>`;
                 div.innerHTML += str;
+
+                if (email == result[i].writer) {
+                    document.getElementById(`modBtn${i}`).disabled = false;
+                    document.getElementById(`delBtn${i}`).disabled = false;
+                }
+
             }
+
+
         } else {
             document.getElementById('cmtListArea').innerHTML = "댓글이 없어요.";
         }

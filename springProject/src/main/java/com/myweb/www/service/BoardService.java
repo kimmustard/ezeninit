@@ -32,8 +32,8 @@ public interface BoardService {
 	
 	/* HomeController */
 	List<BoardVO> getNewList();
-
 	List<BoardVO> getNoticeList();
+	List<BoardVO> getMyList(String name);
 
 
 
