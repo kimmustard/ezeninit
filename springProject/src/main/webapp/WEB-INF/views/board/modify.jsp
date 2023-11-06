@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
- <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>  
- <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+     <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+    	<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,49 +13,65 @@
 	color: red;
 }
 </style>
+
 </head>
 <body>
 	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
-	<form:form action="/board/modify" method="post" modelAttribute="bvo" enctype="multipart/form-data">
-			<table class="table table-hover">
-				<tr>
-					<td>글번호</td>
-					<td><input type="text" value="${bvo.bno }" name="bno" readonly="readonly"></td>
-				</tr>
-				<tr>
-					<td>작성자</td>
-					<td><input type="text" value="${bvo.writer }" name="writer" readonly="readonly"></td>
-				</tr>
-				<tr> 
-					<td>글제목</td>
-					<td><form:input type="text" path="title" value="${bvo.title }" name="title" /> <form:errors class="errorFont" path="title"></form:errors>
-					</td>
-						
-					
-				</tr>
-				<tr>
-					<td>내용</td>
-					<td><form:textarea type="text" path="content" value="${bvo.content }" name="content" rows="3" /> <form:errors class="errorFont" path="content"></form:errors></td>
-				</tr>
-			</table>
-			
-			<!-- 파일업로드 버튼  -->
-		<div class="form-group">
-	      	<input class="form-control" type="file" name="files" id="files" style="display:none;" multiple="multiple">
-	      	<button type="button" id="trigger" class="btn btn-primary">파일 업로드</button>
-    	</div>
+		<form:form action="/board/modify" method="post" modelAttribute="bvo" enctype="multipart/form-data">
+		<table class="table table-hover">
+			<tr>
+				<th>글번호</th>
+				<td>
+					<input type="text" name="bno" value="${bvo.bno }" readonly="readonly">	
+				</td>
+			</tr>
+			<tr>
+				<th>제목</th>
+				<td>
+					<form:input type="text" path="title" class="form-control" value="${bvo.title }" name="title" id="exampleFormControlInput1" />
+					<form:errors class="errorFont" path="title"></form:errors>
+				</td>
+			</tr>
+			<tr>
+				<th>작성자</th>
+				<td><input type="text" name="writer" value="${bvo.writer }" readonly="readonly"></td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td> 
+				<form:textarea class="form-control" path="content" name="content" value="${bvo.content }" id="exampleFormControlTextarea1" rows="3" />
+				<form:errors class="errorFont" path="content"></form:errors>
+				</td>
+			</tr>
+			<tr>
+				<th>작성일</th>
+				<td><form:hidden path="regAt"/>${bvo.regAt }</td>
+			</tr>
+			<tr>	
+				<th>조회수</th>
+				<td><form:hidden path="readCount"/>${bvo.readCount }</td>
+			</tr>
 		
 		
-		<!-- 첨부파일 표시구역  -->
+		</table>
+		
+		<!-- 수정페이지에서 파일업로드 -->
+		<div class="mb-3">
+			<input type="file" class="form-control" name="files" value="" id="files" style="display:none;" multiple="multiple">
+			<!-- input button 트리거용 -->
+			<button type="button" id="trigger" class="btn btn-outline-primary">파일 업로드</button>
+		</div>
+		
 		<div class="mb-3" id="fileZone">
+			<!-- 첨부파일 표시 구역 -->
 			
 		</div>
 		
 		<hr>
 		
 		<!-- 그림 라인 -->
-		<c:set value="${bdto.flist}" var="flist"></c:set>
+		<c:set value="${boardDTO.flist}" var="flist"></c:set>
 		<ul>
 		<c:forEach items="${flist }" var="fvo">
 				
@@ -80,18 +96,16 @@
 		
 		</c:forEach>
 		</ul>
-			
-			
-		<button type="submit" id="regBtn"> 수정하기 </button> <br>
-		<a href="/board/list"> 리스트로 </a> <br>
-		<a href="/"> 메인으로 </a>
-	</form:form>
 	
-	<script type="text/javascript">
-		const bnoVal = `<c:out value="${bvo.bno}" />`
-	</script>
+	<button type="submit" id="regBtn" class="btn btn-primary"> 수정 완료 </button><br>
+
+</form:form>
+	<br>
+	<a href="/"><button type="button" class="btn btn-primary"> 메인으로 </button></a>
+	
 	<script type="text/javascript" src="/resources/js/boardRegister.js"></script>
 	<script type="text/javascript" src="/resources/js/boardModify.js"></script>
 	<jsp:include page="../common/footer.jsp" />
+
 </body>
 </html>

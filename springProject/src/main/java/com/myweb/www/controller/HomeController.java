@@ -1,46 +1,38 @@
 package com.myweb.www.controller;
 
-import java.security.Principal;
-import java.util.List;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import com.myweb.www.domain.BoardVO;
-import com.myweb.www.service.BoardService;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Handles requests for the application home page.
  */
-@Slf4j
 @Controller
-@RequiredArgsConstructor
 public class HomeController {
 	
-	private final BoardService bsv;
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	
-	@GetMapping("/")
-	public String home(Model model, Principal principal) {
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String home(Locale locale, Model model) {
+		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		List<BoardVO> noticeList = bsv.getNoticeList();
-		List<BoardVO> newList = bsv.getNewList();
-
-		if(principal != null) {
-			log.info("user name = {}", principal.getName());
-			List<BoardVO> myList = bsv.getMyList(principal.getName());
-			model.addAttribute("myList", myList);
-		}
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		
-		model.addAttribute("noticeList", noticeList);
-		model.addAttribute("newList", newList);
+		String formattedDate = dateFormat.format(date);
+		
+		model.addAttribute("serverTime", formattedDate );
+		
 		return "index";
 	}
 	

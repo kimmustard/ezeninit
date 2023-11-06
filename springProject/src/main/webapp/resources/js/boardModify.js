@@ -7,17 +7,18 @@ document.addEventListener('click', (e) => {
 
         removefileToServer(uuid).then(result => {
             if (result == 1) {
-                alert('파일삭제 성공!');
+                alert('파일삭제 성공!!');
                 e.target.closeset('li').remove();
             } else {
-                alert('파일삭제 실패');
+                alert('파일삭제 실패...');
             }
-
         })
 
         location.reload();
     }
+
 })
+
 
 async function removefileToServer(uuid) {
     try {

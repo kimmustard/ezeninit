@@ -18,7 +18,6 @@ mod_at datetime default now(),
 read_count int default 0,
 cmt_qty int default 0,
 has_file int default 0,
-isDel varchar(10) default 'N',
 primary key(bno)
 );
 
@@ -33,7 +32,6 @@ writer varchar(100) not null,
 content text not null,
 reg_at datetime default now(),
 mod_at datetime default now(),
-isDel varchar(10) default 'N',
 primary key(cno)
 );
 
@@ -57,7 +55,6 @@ pwd varchar(1000) not null,
 nick_name varchar(100) not null,
 reg_at datetime default now(),
 last_login datetime default null,
-isDel varchar(10) default 'N',
 primary key(email)
 );
 

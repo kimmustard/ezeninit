@@ -2,25 +2,35 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.myweb.www.repository.CommentDAO">
-	<insert id="insert">
-		insert into comment(bno ,writer, content)
-		values(#{bno}, #{writer}, #{content})
-	</insert>
-
-	<select id="getList" resultType="com.myweb.www.domain.CommentVO">
-		select * from comment where bno = #{bno} and isDel = 'N';
-	</select>
-	
-	<update id="delete">
-		update comment set isDel = 'Y' where cno = #{cno}
-	</update>
-	
-	<update id="modify">
-		update comment set content = #{content}, mod_at = now() where cno = #{cno}
-	</update>
-	
-	<update id="cmtDeleteAll">
-		update comment set isDel = 'Y' where bno = #{bno}
-	</update>
-</mapper>
+  <mapper namespace="com.myweb.www.repository.CommentDAO">
+  	<insert id="insert">
+  		insert into comment(bno, writer, content)
+  		values(#{bno}, #{writer}, #{content})
+  	</insert>
+  	
+ <!--  	<select id="getList" resultType="com.myweb.www.domain.CommentVO">
+  		select * from comment where bno = #{bno} order by cno desc
+  	</select> -->
+  	<select id="selectOneBnoTotalCount" resultType="int">
+  		select count(cno) from comment where bno = #{bno}
+  	</select>
+  	
+  	<select id="selectListPaging" resultType="com.myweb.www.domain.CommentVO">
+  		select * from comment where bno = #{bno} 
+  		order by cno desc limit #{pgvo.pageStart}, #{pgvo.qty}
+  	</select>
+  	
+  	<delete id="delete">
+  		delete from comment where cno = #{cno}
+  	</delete>
+  	
+  	<delete id="cmtDeleteAll">
+  		delete from comment where bno = #{bno}
+  	</delete>
+  
+  	<update id="modify">
+  		update comment set content = #{content}, mod_at = now() where cno = #{cno}
+  	</update>
+  	
+  
+  </mapper>

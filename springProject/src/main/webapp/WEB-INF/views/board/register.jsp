@@ -1,68 +1,54 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+	pageEncoding="UTF-8"%>
+	<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
-<meta charset="UTF-8">
 <head>
-<title>Insert title here</title>
-<link rel="stylesheet" href="/resources/css/bootstrap.css" />
+<meta charset="UTF-8">
+<title>Register Page</title>
 <style type="text/css">
 .errorFont{
 	color: red;
 }
 </style>
-
 </head>
 <body>
+	<sec:authentication property="principal.mvo.email" var="authEmail"/>
 	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
-	<sec:authentication property="principal.mvo.email" var="authEmail"/>
-	
 	<form:form action="/board/register" method="post" modelAttribute="bvo" enctype="multipart/form-data">
-	
-		<table class="table table-hover">
+		<div class="mb-3">
+			<label for="exampleFormControlInput1" class="form-label">title</label>
+			<form:input type="text" path="title" class="form-control" name="title" id="exampleFormControlInput1" />
+			<form:errors class="errorFont" path="title"></form:errors>
+		</div>
+		<div class="mb-3">
+			<label for="exampleFormControlInput1" class="form-label">writer</label>
+			<input type="text" class="form-control" name="writer" value="${authEmail }" id="exampleFormControlInput1" readonly="readonly">
+		</div>
+		<div class="mb-3">
+			<label for="exampleFormControlTextarea1" class="form-label">content</label>
+			<form:textarea class="form-control" path="content" name="content" id="exampleFormControlTextarea1" rows="3" />
+			<form:errors class="errorFont" path="content"></form:errors>
+		</div>
 		
-			<tr>
-				<td>제목</td>
-				<td>
-					<form:input type="text" path="title" name="title"/>
-					<form:errors class="errorFont" path="title" ></form:errors>
-				</td>
-			</tr>	
-			<tr>
-				<td>글쓴이</td>
-				<td><input type="text" value="${authEmail}" name="writer" readonly="readonly"></td>
-			</tr>
-			<tr>
-				<td>내용</td>
-				<td>
-					<form:textarea path="content" name="content" rows="3" />
-					<form:errors class="errorFont" path="content"></form:errors>
-				</td>
-			</tr>
+		<div class="mb-3">
+			<input type="file" class="form-control" name="files" value="" id="files" style="display:none;" multiple="multiple">
+			<!-- input button 트리거용 -->
+			<button type="button" id="trigger" class="btn btn-outline-primary">파일 업로드</button>
+		</div>
 		
-		</table>
-		
-		<!-- 파일업로드 버튼  -->
-		<div class="form-group">
-	      	<input class="form-control" type="file" name="files" id="files" style="display:none;" multiple="multiple">
-	      	<button type="button" id="trigger" class="btn btn-primary">파일 업로드</button>
-    	</div>
-		
-		
-		<!-- 첨부파일 표시구역  -->
 		<div class="mb-3" id="fileZone">
+			<!-- 첨부파일 표시 구역 -->
 			
 		</div>
-	
-		<button type="submit" id="regBtn" class="btn btn-primary"> 작성완료 </button> <br>
+		
+		<button type="submit" class="btn btn-primary" id="regBtn"> 작성완료 </button>
+		
 	</form:form>
-		<a href="/"><button type="button" class="btn btn-primary"> 메인으로 </button></a>
-	
-	<script type="text/javascript" src="/resources/js/boardRegister.js"></script>
-	<jsp:include page="../common/footer.jsp" />
+<script type="text/javascript" src="/resources/js/boardRegister.js"></script>
+<jsp:include page="../common/footer.jsp" />
 </body>
 </html>

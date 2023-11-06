@@ -8,11 +8,10 @@ import lombok.ToString;
 
 @Setter
 @Getter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class FileVO {
-
 	
 	private String uuid;
 	private String saveDir;
