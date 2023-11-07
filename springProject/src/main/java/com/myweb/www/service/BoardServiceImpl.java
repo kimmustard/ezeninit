@@ -18,68 +18,86 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class BaordServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService{
 
 	private final BoardDAO bdao;
-	private final CommentService csv;
 	private final FileDAO fdao;
+	private final CommentService csv;
 	
-	
+	@Transactional
+	@Override
+	public int insert(BoardDTO bdto) {
+		int isUp = bdao.insert(bdto.getBvo());
+		
+		if(bdto.getFlist() == null) {
+			isUp *= 1;
+			return isUp;
+		}
+		
+		//bvo insert 이후 파일이 없으면?
+		if(isUp > 0 && bdto.getFlist().size() > 0) {
+			Long bno = bdao.selectLastBno();
+			for (FileVO fvo : bdto.getFlist()) {
+				fvo.setBno(bno);
+				isUp *= fdao.inserFile(fvo);
+			}
+		}
+		
+		return isUp;
+	}
 
-//	@Override
-//	public int insert(BoardVO bvo) {
-//		
-//		return bdao.insert(bvo);
-//	}
+	@Override
+	public int ninsert(BoardDTO bdto) {
+		int isUp = bdao.ninsert(bdto.getBvo());
+		
+		if(bdto.getFlist() == null) {
+			isUp *= 1;
+			return isUp;
+		}
+		
+		//bvo insert 이후 파일이 없으면?
+		if(isUp > 0 && bdto.getFlist().size() > 0) {
+			Long bno = bdao.selectLastBno();
+			for (FileVO fvo : bdto.getFlist()) {
+				fvo.setBno(bno);
+				isUp *= fdao.inserFile(fvo);
+			}
+		}
+		
+		return isUp;
+	}
 
 	@Transactional
 	@Override
 	public List<BoardVO> getList(PagingVO pgvo) {
-		bdao.updateCommentCount();
-		bdao.updateFileCount();
-		
-		
+		bdao.cntCommentList();
+		bdao.cntFileList();
 		return bdao.getList(pgvo);
 	}
 
-//	@Override
-//	public BoardVO detail(Long bno) {
-//		
-//		return bdao.detail(bno);
-//	}
-//	@Override
-//	public BoardVO cntdetail(Long bno) {
-//		bdao.readdetail(bno);
-//		return bdao.cntdetail(bno);
-//	}
+	@Transactional
+	@Override
+	public BoardDTO detail(Long bno) {
+		bdao.readCnt(bno);
+		
+		BoardVO bvo = bdao.detail(bno);
+		List<FileVO> flist = fdao.selectList(bno);
+		BoardDTO bdto = new BoardDTO();
+		bdto.setBvo(bvo);
+		bdto.setFlist(flist);
+		return bdto;
+	}
+	@Transactional
+	@Override
+	public BoardDTO nodetail(Long bno) {
+		BoardVO bvo = bdao.detail(bno);
+		List<FileVO> flist = fdao.selectList(bno);
+		BoardDTO bdto = new BoardDTO();
+		bdto.setBvo(bvo);
+		bdto.setFlist(flist);
+		return bdto;
+	}
 
-	@Transactional
-	@Override
-	public BoardDTO getDetail(Long bno) {
-		BoardVO bvo = bdao.getDetail(bno);
-		List<FileVO> flist = fdao.selectList(bno);
-		BoardDTO bdto = new BoardDTO();
-		bdto.setBvo(bvo);
-		bdto.setFlist(flist);
-		
-		return bdto;
-	}
-	
-	@Transactional
-	@Override
-	public BoardDTO getCntDetail(Long bno) {
-		bdao.readdetail(bno);	//카운터
-		
-		BoardVO bvo = bdao.getCntDetail(bno);
-		List<FileVO> flist = fdao.selectList(bno);
-		BoardDTO bdto = new BoardDTO();
-		bdto.setBvo(bvo);
-		bdto.setFlist(flist);
-		
-		return bdto;
-	}
-	
-	@Transactional
 	@Override
 	public int modify(BoardDTO bdto) {
 		
@@ -93,11 +111,10 @@ public class BaordServiceImpl implements BoardService{
 				// 모든 fvo에 bno 세팅
 				for(FileVO fvo : bdto.getFlist()) {
 					fvo.setBno(bno);
-					isOk *= fdao.insertFile(fvo);
+					isOk *= fdao.inserFile(fvo);
 				}
 			}
 		}
-		
 		return isOk;
 	}
 
@@ -109,40 +126,14 @@ public class BaordServiceImpl implements BoardService{
 		return bdao.remove(bno);
 	}
 
-
 	@Override
 	public int getTotalCount(PagingVO pgvo) {
-		
 		return bdao.getTotalCount(pgvo);
-	}
-
-	@Transactional
-	@Override
-	public int insert(BoardDTO bdto) {
-		// bvo, flist 가져와서 각자 db에 저장하는 역할
-		int isUp = bdao.insert(bdto.getBvo());
-		
-		if(bdto.getFlist() == null) {
-			isUp *= 1;
-			return isUp;
-		}
-		
-		// bvo insert후 파일도 있다면...
-		if(isUp > 0 && bdto.getFlist().size() > 0) {
-			Long bno = bdao.selectOneBno();	// 가장 마지막에 등록된 bno
-			// 모든 파일에 bno set
-			for(FileVO fvo : bdto.getFlist()) {
-				fvo.setBno(bno);
-				isUp*= fdao.insertFile(fvo);
-			}
-			
-		}
-		return isUp; 
 	}
 
 	@Override
 	public int removeFile(String uuid) {
-			
+		
 		return fdao.removeFile(uuid);
 	}
 
@@ -152,5 +143,25 @@ public class BaordServiceImpl implements BoardService{
 		return fdao.getFile(uuid);
 	}
 
+	@Override
+	public List<BoardVO> getNewList() {
+		
+		return bdao.getNewList();
+	}
+
+	@Override
+	public List<BoardVO> getNoticeList() {
+		return bdao.getNoticeList();
+	}
+
+	@Override
+	public List<BoardVO> getMyList(String name) {
+		
+		return bdao.getMyList(name);
+	}
+
+
+
+	
 
 }

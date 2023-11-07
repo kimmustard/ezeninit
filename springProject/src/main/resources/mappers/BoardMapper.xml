@@ -2,80 +2,93 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="com.myweb.www.repository.BoardDAO">
-  		<insert id="insert">
-  			insert into board(title, writer, content)
-  			values(#{title}, #{writer}, #{content})
-  		</insert>
-  		
-  		<select id="selectOneBno" resultType="Long">
-  			select max(bno) from board
-  		</select>
-  		
-  		<select id="getList" resultType="com.myweb.www.domain.BoardVO">
-  			select * from board 
-  			<include refid="search"></include>
-  			order by bno desc 
-  			limit #{pageStart}, #{qty}	
-  		</select>
-  		
-  		<update id="updateCommentCount">
-			update board set cmt_qty = (select count(cno) from comment where bno = board.bno)
-		</update>
+<mapper namespace="com.myweb.www.repository.BoardDAO">
+	<insert id="insert">
+		insert into board(title, writer, content)
+		values(#{title}, #{writer}, #{content})
+	</insert>
+	
+	<insert id="ninsert">
+		insert into board(title, writer, content, isDel)
+		values(#{title}, #{writer}, #{content}, 'A')
+	</insert>
+	
+	<select id="selectLastBno" resultType="Long">
+		select max(bno) from board where isDel = 'N'
+	</select>
+	
+	<select id="getList" resultType="com.myweb.www.domain.BoardVO">
+		select * from board where isDel = 'N'
+		<include refid="search"></include>
+		order by bno desc limit #{pageStart}, #{qty}
+	</select>
+	
+	<select id="getTotalCount" resultType="int">
+		select count(bno) from board where isDel = 'N'
+		<include refid="search"></include>
+	</select>
+	
+	<update id="cntCommentList">
+		update board set cmt_qty = (select count(bno) from comment where bno = board.bno and isDel = 'N')
+	</update>
+	
+	<update id="cntFileList">
+		update board set has_file = (select count(bno) from file where bno = board.bno)
+	</update>
+	
+	
+	<select id="detail" resultType="com.myweb.www.domain.BoardVO">
+		select * from board where bno = #{bno}
+	</select>
+	
+	<update id="readCnt">
+		update board set read_count = read_count + 1 where bno = #{bno}
+	</update>
+	
+	<update id="modify">
+		update board set title = #{title}, content = #{content}, mod_at = now() where bno = #{bno}
+	</update>
+	
+	<update id="remove">
+		update board set isDel = 'Y' where bno = #{bno}
+	</update>
+
+	<sql id="search">
+		<if test="type != null">
+			<trim prefix="AND" prefixOverrides="OR">
+				<foreach collection="typeToArray">
+					<trim prefix="OR">
+						<choose>
+							<when test="type== 't'.toString()">
+								title like concat('%',#{keyword},'%')
+							</when>
+							<when test="type== 'w'.toString()">
+								writer like concat('%',#{keyword},'%')
+							</when>
+							<when test="type== 'c'.toString()">
+								content like concat('%',#{keyword},'%')
+							</when>
+						</choose>
+					</trim>
+				</foreach>
+			</trim>
 		
-		<update id="updateFileCount">
-			update board set has_file = (select count(uuid) from file where bno = board.bno)
-		</update>
-  		
-  		
-  		<select id="getCntDetail" resultType="com.myweb.www.domain.BoardVO">
-  			select * from board where bno = #{bno}
-  		</select>
-  		
-  		<select id="getDetail" resultType="com.myweb.www.domain.BoardVO">
-  			select * from board where bno = #{bno}
-  		</select>
-  		
-  		<update id="readdetail">
-  			update board set read_count = read_count +1 where bno = #{bno}
-  		</update>
-  		
-  		<update id="modify">
-  			update board set title = #{title}, content = #{content}, mod_at = now() where bno = #{bno}
-  		</update>
-  		
-  		<delete id="remove">
-  			delete from board where bno = #{bno}
-  		</delete>
-  		
-  		<select id="getTotalCount" resultType="int">
-  			select count(bno) from board 
-  			<include refid="search"></include>
-  		</select>
-  		
-  		
-  		
-  		<sql id="search">
-  			<if test="type != null">
-  				<trim prefix="where (" suffix=")" prefixOverrides="OR">
-	  				<foreach collection="typeToArray" item="type">
-	  					<trim prefix="OR">
-	  						<choose>
-	  							<when test="type == 't'.toString()">
-	  								title like concat('%', #{keyword}, '%')
-	  							</when>
-	  							<when test="type == 'w'.toString()">
-	  								writer like concat('%', #{keyword}, '%')
-	  							</when>
-	  							<when test="type == 'c'.toString()">
-	  								content like concat('%', #{keyword}, '%')
-	  							</when>
-	  						</choose>
-	  					</trim>
-	  				</foreach>
-  				</trim>
-  			</if>
-  		</sql>
-  		
-  		
-  </mapper>
+		</if>
+	
+	</sql>
+	
+	
+	<select id="getNewList" resultType="com.myweb.www.domain.BoardVO">
+		select * from board where isDel = 'N' order by bno desc limit 10
+	</select>
+	
+	<select id="getNoticeList" resultType="com.myweb.www.domain.BoardVO">
+		select * from board where isDel = 'A' order by bno desc
+	</select>
+	
+	<select id="getMyList" resultType="com.myweb.www.domain.BoardVO">
+		select * from board where isDel = 'N' and writer = #{email} order by bno desc
+	</select>
+
+
+</mapper>

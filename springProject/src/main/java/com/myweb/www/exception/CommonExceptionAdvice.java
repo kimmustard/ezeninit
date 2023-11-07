@@ -9,14 +9,13 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @ControllerAdvice
 public class CommonExceptionAdvice {
-	
+
 	@ExceptionHandler(Exception.class)
 	public String except(Exception ex, Model model) {
-		log.info("ex.message = {}", ex.getMessage());
+		log.info("ex.meaages = {}" , ex.getMessage());
 		model.addAttribute("exception", ex);
 		return "custom500";
 	}
@@ -27,4 +26,5 @@ public class CommonExceptionAdvice {
 		model.addAttribute("exception", ex);
 		return "custom404";
 	}
+	
 }

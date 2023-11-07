@@ -1,39 +1,56 @@
 package com.myweb.www.controller;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.security.Principal;
+import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.myweb.www.domain.BoardVO;
+import com.myweb.www.service.BoardService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Handles requests for the application home page.
  */
+@Slf4j
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private final BoardService bsv;
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
+	
+	@GetMapping("/")
+	public String home(Model model, Principal principal) {
 		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		List<BoardVO> noticeList = bsv.getNoticeList();
+		List<BoardVO> newList = bsv.getNewList();
+
+		if(principal != null) {
+			log.info("user name = {}", principal.getName());
+			List<BoardVO> myList = bsv.getMyList(principal.getName());
+			model.addAttribute("myList", myList);
+		}
 		
-		String formattedDate = dateFormat.format(date);
-		
-		model.addAttribute("serverTime", formattedDate );
-		
+		model.addAttribute("noticeList", noticeList);
+		model.addAttribute("newList", newList);
 		return "index";
 	}
 	
+	@GetMapping("c404")
+	public String c404() {
+		return "custom404";
+	}
+	
+	@GetMapping("c500")
+	public String c500() {
+		return "custom500";
+	}
 }

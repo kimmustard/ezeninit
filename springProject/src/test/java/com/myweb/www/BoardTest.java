@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {com.myweb.www.config.RootConfig.class})
 public class BoardTest {
-
+	
 	@Inject
 	private BoardDAO bdao;
 	
@@ -32,5 +32,4 @@ public class BoardTest {
 			
 		}
 	}
-	
 }

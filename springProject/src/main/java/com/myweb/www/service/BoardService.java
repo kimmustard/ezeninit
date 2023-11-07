@@ -9,30 +9,34 @@ import com.myweb.www.domain.PagingVO;
 
 public interface BoardService {
 
-//	int insert(BoardVO bvo);
+	/* BoardController */
+	int insert(BoardDTO bdto);
+	int ninsert(BoardDTO boardDTO);
 
 	List<BoardVO> getList(PagingVO pgvo);
 
-//	BoardVO detail(Long bno);
-//	BoardVO cntdetail(Long bno);
-	
-	BoardDTO getDetail(Long bno);
-	BoardDTO getCntDetail(Long bno);
+	BoardDTO detail(Long bno);
+	BoardDTO nodetail(Long bno);
 
-	int modify(BoardDTO boardDTO);
+	int modify(BoardDTO bdto);
 
 	int remove(Long bno);
 
 	int getTotalCount(PagingVO pgvo);
 
-	int insert(BoardDTO boardDTO);
-
 	int removeFile(String uuid);
 
 	FileVO getFile(String uuid);
 
+	
+	
+	/* HomeController */
+	List<BoardVO> getNewList();
+	List<BoardVO> getNoticeList();
+	List<BoardVO> getMyList(String name);
 
 
 
+	
 
 }

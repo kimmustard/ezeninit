@@ -6,18 +6,16 @@ import com.myweb.www.domain.FileVO;
 
 public interface FileDAO {
 
-	int insertFile(FileVO fvo);
+	int inserFile(FileVO fvo);
 
 	List<FileVO> selectList(Long bno);
 
 	int removeFile(String uuid);
 
-	FileVO getFile(String uuid);
-
 	void fileDeleteAll(Long bno);
 
-	List<FileVO> selectListAllFiles();
+	FileVO getFile(String uuid);
 
-
+	List<FileVO> selectAllFiles();
 
 }
